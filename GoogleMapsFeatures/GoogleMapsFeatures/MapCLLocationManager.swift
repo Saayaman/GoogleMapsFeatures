@@ -15,11 +15,14 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
     var mapView:GMSMapView!
     fileprivate var zoomLevel: Float = 15.0
     var locationManager = CLLocationManager()
+    
+    var markers:[GMSMarker] = []
 
     
-    init(_ mapView: GMSMapView) {
+    init(_ mapView: GMSMapView, _ markers:[GMSMarker]) {
         super.init()
         self.mapView = mapView
+        self.markers = markers
         
         locationManager.delegate = self
         
@@ -49,6 +52,12 @@ class MapCLLocationManager: NSObject, CLLocationManagerDelegate{
         } else {
             mapView.animate(to: camera)
         }
+        
+        var bounds = GMSCoordinateBounds()
+        for marker in self.markers {
+            bounds = bounds.includingCoordinate(marker.position)
+        }
+        mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0, 100.0 ,50.0 ,50.0)))
     }
     
     // Handle authorization for the location manager.

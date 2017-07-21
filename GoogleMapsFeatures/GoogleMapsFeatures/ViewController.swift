@@ -20,15 +20,30 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        manager = MapCLLocationManager(mapView)
+        let mapMaker = MapMaker()
+        markers = mapMaker.makeMarker(mapView)
+        
+        manager = MapCLLocationManager(mapView, markers)
         delegate = MapViewDelegate(self)
         
         self.loadTemplate()
         
         mapView.isHidden = true
         
-        let mapMaker = MapMaker()
-        mapMaker.makeMarker(mapView)
+
+//
+//        delay(seconds: 2) { () -> () in
+//            let path = GMSMutablePath()
+//            path.add(self.markers[0].position)
+//            path.add(self.markers[1].position)
+//            
+//            let rectangle = GMSPolyline(path: path)
+//            rectangle.map = self.mapView
+//            
+//            let bounds = GMSCoordinateBounds(path: path)
+//            
+//            self.mapView.animate(with: GMSCameraUpdate.fit(bounds, with: UIEdgeInsetsMake(50.0 , 50.0 ,50.0 ,50.0)))
+//        }
         
         placesClient = GMSPlacesClient.shared()
     }
@@ -38,7 +53,17 @@ class ViewController: UIViewController {
         
         myView.center.y  += view.bounds.height
     }
+  
     
+    func delay(seconds: Double, completion:@escaping ()->()) {
+//        let popTime = DispatchTime.init(uptimeNanoseconds: UInt64(Int64(seconds)))
+        let popTime = DispatchTime.now()
+        
+        DispatchQueue.main.asyncAfter(deadline: popTime){
+            print("one!")
+        }
+    }
+
 
     
     func loadTemplate(){
